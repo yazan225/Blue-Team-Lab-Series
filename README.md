@@ -1,2 +1,3 @@
-# Blue-Team-Lab-Series
-Lab 1 Investigating Suspicious Login Activity (Brute Force Detection)
+# 🔵 Blue Team Lab Series
+
+Welcome to my Blue Team hands-on lab series. This repository contains practical cybersecurity labs focused on detection, investigation, and incident response.
