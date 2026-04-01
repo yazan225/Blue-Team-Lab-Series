@@ -1,0 +1,121 @@
+# 🔵 Blue Team Lab Series
+
+Welcome to my Blue Team hands-on lab series. This repository contains practical cybersecurity labs focused on detection, investigation, and incident response.
+
+---
+
+# 🧪 Lab 1: Investigating Suspicious Login Activity (Brute Force Detection)
+
+---
+
+## 🧠 Objective
+The objective of this lab is to detect and analyze brute-force login attempts using Linux authentication logs, and apply basic incident response techniques.
+
+---
+
+## 📖 Scenario
+You are a Security Operations Center (SOC) analyst responsible for monitoring a Linux server.
+
+Multiple failed login attempts have been detected. Your task is to investigate the activity and determine whether a brute-force attack is occurring.
+
+---
+
+## 🎯 Goals
+- Identify failed login attempts
+- Detect brute-force attack patterns
+- Extract attacker IP addresses
+- Check for successful compromise
+- Recommend mitigation actions
+
+---
+
+## 🛠️ Lab Environment
+
+- **Operating System:** Ubuntu / Kali Linux  
+- **Log File:** `/var/log/auth.log`  
+- **Service:** SSH  
+
+---
+
+## ⚙️ Simulating the Attack (Optional)
+
+Install SSH service:
+```bash
+sudo apt update
+sudo apt install openssh-server
+```
+
+Generate failed login attempts:
+```bash
+ssh fakeuser@localhost
+```
+
+Repeat multiple times using incorrect passwords to simulate a brute-force attack.
+
+## 🔍 Investigation Steps
+
+1. View Authentication Logs
+```bash
+cat /var/log/auth.log | less
+```
+
+2. Filter Failed Login Attempts
+```bash
+grep "Failed password" /var/log/auth.log
+```
+
+Example output:
+```bash
+Failed password for invalid user admin from 192.168.1.10 port 54321 ssh2
+```
+
+3. Identify Brute Force Activity
+
+Count the number of failed attempts per IP address:
+```bash
+grep "Failed password" /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -nr
+```
+
+This helps identify suspicious IPs generating a high number of login attempts.
+
+4. Identify Targeted Accounts
+```bash
+grep "Failed password for" /var/log/auth.log
+```
+
+Analysis:
+"invalid user" → random username guessing
+valid usernames → targeted attack
+
+5. Check for Successful Logins
+```bash
+grep "Accepted password" /var/log/auth.log
+```
+
+⚠️ If a suspicious IP appears here after multiple failures, it may indicate a successful compromise.
+
+📊 Findings (Example)
+Suspicious IP: 192.168.1.10
+Failed attempts: 100+
+Targeted users: admin, root
+Potential successful login detected
+
+
+🛡️ Mitigation & Recommendations
+Block Attacker IP
+```bash
+sudo ufw deny from 192.168.1.10
+```
+
+Install Fail2Ban
+```bash
+sudo apt install fail2ban
+```
+
+Additional Security Measures
+Disable root SSH login
+Use SSH key-based authentication
+Change default SSH port
+Monitor logs regularly
+
+
